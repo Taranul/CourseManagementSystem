@@ -36,11 +36,11 @@
                     return true;
                 }
 
-                UniversityCourseManagementSystem.PrintError("This professor workload is too high!");
+                UniversityCourseManagementSystem.PrintErrorAndExit("This professor workload is too high!");
                 return false;
             }
 
-            UniversityCourseManagementSystem.PrintError("This professor already teaches this course!");
+            UniversityCourseManagementSystem.PrintErrorAndExit("This professor already teaches this course!");
             return false;
         }
 
@@ -52,7 +52,7 @@
                 return true;
             }
 
-            UniversityCourseManagementSystem.PrintError("This professor doesn't teach this course yet!");
+            UniversityCourseManagementSystem.PrintErrorAndExit("This professor doesn't teach this course yet!");
             return false;
         }
     }

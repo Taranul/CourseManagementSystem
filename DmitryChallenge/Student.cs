@@ -40,15 +40,15 @@
                         return true;
                     }
 
-                    UniversityCourseManagementSystem.PrintError("This student is busy enough. He can't enroll more courses!");
+                    UniversityCourseManagementSystem.PrintErrorAndExit("This student is busy enough. He can't enroll more courses!");
                     return false;
                 }
 
-                UniversityCourseManagementSystem.PrintError("This course is full!");
+                UniversityCourseManagementSystem.PrintErrorAndExit("This course is full!");
                 return false;
             }
 
-            UniversityCourseManagementSystem.PrintError("This course has already been enrolled");
+            UniversityCourseManagementSystem.PrintErrorAndExit("This course has already been enrolled");
             return false;
         }
 
@@ -61,7 +61,7 @@
                 return true;
             }
 
-            UniversityCourseManagementSystem.PrintError("This student doesn't study on this course yet!");
+            UniversityCourseManagementSystem.PrintErrorAndExit("This student doesn't study on this course yet!");
             return false;
         }
     }

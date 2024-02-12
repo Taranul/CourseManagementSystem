@@ -22,9 +22,15 @@ namespace DmitryChallenge
             {
                 Console.WriteLine("");
                 Console.WriteLine("========================================");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\tWrite a command from the list: \n'course' - add a new course\n'student' - add a new student\n'professor' - add a new professor\n'enroll' - enroll a student to course\n'drop' - drop a student from course\n'teach' - make professor to teach a course\n'exempt' - make professor exempt from course");
-                Console.ForegroundColor = ConsoleColor.White;
+                PrintColoredMessage("\tWrite a command from the list: " +
+                    "\n'course' - add a new course" +
+                    "\n'student' - add a new student" +
+                    "\n'professor' - add a new professor" +
+                    "\n'enroll' - enroll a student to course" +
+                    "\n'drop' - drop a student from course" +
+                    "\n'teach' - make professor to teach a course" +
+                    "\n'exempt' - make professor exempt from course", 
+                    ConsoleColor.Yellow);
                 string userInput = managementSystem.TryToGetCorrectInput();
 
                 switch (userInput)
@@ -42,72 +48,66 @@ namespace DmitryChallenge
                         }
                         else
                         {
-                            PrintError("Incorrect level input!");
+                            PrintErrorAndExit("Incorrect level input!");
                         }
 
                         Console.ReadKey();
                         break;
-                    case "student":
-                        Console.Write("Write student name: ");
+                    case "student": //refactor
+                        Console.Write($"Write student name: ");
                         string studentName = managementSystem.TryToGetCorrectInput();
-                        _universityMembers.Add(new Student(studentName));
-                        Console.WriteLine("Added successfully");
-                        Console.ReadKey();
+                        student = new Student(studentName);
+                        managementSystem.CreateMember(student);
                         break;
                     case "professor":
-                        Console.Write("Write professor name: ");
+                        Console.Write($"Write professor name: ");
                         string professorName = managementSystem.TryToGetCorrectInput();
-                        _universityMembers.Add(new Professor(professorName));
-                        Console.WriteLine("Added successfully");
-                        Console.ReadKey();
+                        professor = new Professor(professorName);
+                        managementSystem.CreateMember(professor);
                         break;
                     case "enroll":
-                        student = _universityMembers[managementSystem.GetMemberId()] as Student;
+                        student = _universityMembers[managementSystem.GetId("member")] as Student;
                         if (student == null)
-                            PrintError("This is not a student!");
-                        course = _courses[managementSystem.GetCourseId()];
+                            PrintErrorAndExit("This is not a student!");
+                        course = _courses[managementSystem.GetId("course")];
                         student.Enroll(course);
                         Console.WriteLine("Enrolled successfully");
                         Console.ReadKey();
                         break;
                     case "drop":
-                        student = _universityMembers[managementSystem.GetMemberId()] as Student;
+                        student = _universityMembers[managementSystem.GetId("member")] as Student;
                         if (student == null)
-                            PrintError("This is not a student!");
-                        course = _courses[managementSystem.GetCourseId()];
+                            PrintErrorAndExit("This is not a student!");
+                        course = _courses[managementSystem.GetId("course")];
                         student.Drop(course);
                         Console.WriteLine("Dropped succsessfully");
                         Console.ReadKey();
                         break;
                     case "teach":
-                        professor = _universityMembers[managementSystem.GetMemberId()] as Professor;
+                        professor = _universityMembers[managementSystem.GetId("member")] as Professor;
                         if (professor == null)
-                            PrintError("This is not a professor!");
-                        course = _courses[managementSystem.GetCourseId()];
+                            PrintErrorAndExit("This is not a professor!");
+                        course = _courses[managementSystem.GetId("course")];
                         professor.Teach(course);
                         Console.WriteLine("Professor is succsessfully assigned to teach this course");
                         Console.ReadKey();
                         break;
                     case "exempt":
-                        professor = _universityMembers[managementSystem.GetMemberId()] as Professor;
+                        professor = _universityMembers[managementSystem.GetId("member")] as Professor;
                         if (professor == null)
-                            PrintError("This is not a professor!");
-                        course = _courses[managementSystem.GetCourseId()];
+                            PrintErrorAndExit("This is not a professor!");
+                        course = _courses[managementSystem.GetId("course")];
                         professor.Exempt(course);
                         Console.WriteLine("Professor is exempted");
                         Console.ReadKey();
                         break;
                     default:
-                        PrintError("Error!");
+                        PrintErrorAndExit("Error!");
                         return;
                 }
 
                 #region printResult
-                Console.WriteLine("========================================");
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("\tRESULT WITH CHANGES: ");
-                Console.WriteLine("");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.Clear();
                 managementSystem.ShowAllInfo();
 
                 Console.WriteLine("Done? just tap 'enter', otherwise other key");
@@ -115,6 +115,13 @@ namespace DmitryChallenge
                     return;
                 #endregion
             }
+        }
+
+        private void CreateMember(UniversityMember member)
+        {
+            _universityMembers.Add(member);
+            Console.WriteLine("Added successfully");
+            Console.ReadKey();
         }
 
         private void FillInitialData()
@@ -149,9 +156,7 @@ namespace DmitryChallenge
 
         private void ShowStudentsInfo()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\t\tSTUDENTS: ");
-            Console.ForegroundColor = ConsoleColor.White;
+            PrintColoredMessage("\t\tSTUDENTS: ", ConsoleColor.Green);
 
             Student student;
 
@@ -166,9 +171,7 @@ namespace DmitryChallenge
                     Console.Write("Name: ");
                     student.PrintName();
                     Console.WriteLine("");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Courses enrolled: ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    PrintColoredMessage("Courses enrolled: ", ConsoleColor.Green);
                     student.ShowEnrolledCourses();
                     Console.WriteLine("----------------------------------------");
                 }
@@ -177,9 +180,7 @@ namespace DmitryChallenge
 
         public void ShowProfessorsInfo()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\t\tPROFESSORS: ");
-            Console.ForegroundColor = ConsoleColor.White;
+            PrintColoredMessage("\t\tPROFESSORS: ", ConsoleColor.Green);
 
             Professor professor;
 
@@ -194,9 +195,7 @@ namespace DmitryChallenge
                     Console.Write("Name: ");
                     professor.PrintName();
                     Console.WriteLine("");
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Courses assigned: ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    PrintColoredMessage("Courses assigned: ", ConsoleColor.Red);
                     professor.ShowAssignedCourses();
                     Console.WriteLine("----------------------------------------");
                 }
@@ -205,67 +204,39 @@ namespace DmitryChallenge
 
         public void ShowCoursesInfo()
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("\t\tCOURSES: ");
-            Console.ForegroundColor = ConsoleColor.White;
+            PrintColoredMessage("\t\tCOURSES: ", ConsoleColor.Green);
 
             for (int i = 0; i < _courses.Count; i++)
             {
                 _courses[i].ShowCourseInfo();
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Enrolled students: ");
-                Console.ForegroundColor = ConsoleColor.White;
+                PrintColoredMessage("Enrolled students: ", ConsoleColor.Red);
                 _courses[i].PrintEnrolledStudents();
                 Console.WriteLine("----------------------------------------");
             }
         }
 
-        private int GetMemberId()
+        private int GetId(string objectName)
         {
-            Console.Write("Write ID of member: ");
-            int memberId = 0;
+            Console.Write($"Write ID of {objectName}: ");
+            int Id = 0;
 
             try
             {
-                memberId = int.Parse(Console.ReadLine());
-                memberId--;
+                Id = int.Parse(Console.ReadLine());
+                Id--;
             }
             catch
             {
-                PrintError("Inappropriate value");
+                PrintErrorAndExit("Inappropriate value");
             }
 
-            if (memberId > _universityMembers.Count || memberId < 0)
+            if (Id > _universityMembers.Count || Id < 0)
             {
-                PrintError("This member doesn't exists!");
+                PrintErrorAndExit($"This {objectName} doesn't exists!");
                 return 0;
             }
 
-            return memberId;
-        }
-
-        private int GetCourseId()
-        {
-            Console.Write("Write ID of course: ");
-            int courseId = 0;
-
-            try
-            {
-                courseId = int.Parse(Console.ReadLine());
-                courseId--;
-            }
-            catch
-            {
-                PrintError("Inappropriate value");
-            }
-
-            if (courseId > _universityMembers.Count || courseId < 0)
-            {
-                PrintError("This course doesn't exists!");
-                return 0;
-            }
-
-            return courseId;
+            return Id;
         }
 
         private string TryToGetCorrectInput()
@@ -281,16 +252,14 @@ namespace DmitryChallenge
             }
             else 
             {
-                PrintError("Inappropriate value!");
+                PrintErrorAndExit("Inappropriate value!");
                 return "";
             }
         }
 
-        public static void PrintError(string message)
+        public static void PrintErrorAndExit(string message)
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.White;
+            PrintColoredMessage(message, ConsoleColor.DarkRed);
             Environment.Exit(0);
         }
 
