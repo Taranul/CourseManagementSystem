@@ -18,6 +18,8 @@ namespace DmitryChallenge
             managementSystem.ShowAllInfo();
             #endregion
 
+            // I wrote this comment just to see if branches works properly
+
             while (true)
             {
                 Console.WriteLine("");
