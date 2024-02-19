@@ -27,6 +27,7 @@
             }
         }
 
+        // refactor, because i don't use bool type of method, lol
         public bool Enroll(Course course)
         {
             if (!_enrolledCourses.Contains(course))
@@ -37,6 +38,7 @@
                     {
                         _enrolledCourses.Add(course);
                         course.AddStudent(this);
+                        Console.WriteLine("Enrolled successfully");
                         return true;
                     }
 
@@ -58,6 +60,7 @@
             {
                 _enrolledCourses.Remove(course);
                 course.RemoveStudent(this);
+                Console.WriteLine("Dropped succsessfully");
                 return true;
             }
 

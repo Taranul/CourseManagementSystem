@@ -26,6 +26,7 @@
             }
         }
 
+        // the same as in student - methods are bool, but i don't use it
         public bool Teach(Course course)
         {
             if (!_assignedCourses.Contains(course))
@@ -33,6 +34,7 @@
                 if (_assignedCourses.Count < MAX_LOAD)
                 {
                     _assignedCourses.Add(course);
+                    Console.WriteLine("Professor is succsessfully assigned to teach this course");
                     return true;
                 }
 
@@ -49,6 +51,7 @@
             if (_assignedCourses.Contains(course))
             {
                 _assignedCourses.Remove(course);
+                Console.WriteLine("Professor is exempted");
                 return true;
             }
 

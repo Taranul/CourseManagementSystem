@@ -10,15 +10,10 @@ namespace DmitryChallenge
         private static void Main(string[] args)
         {
             #region preInput
-            Student student;
-            Professor professor;
-            Course course;
             UniversityCourseManagementSystem managementSystem = new UniversityCourseManagementSystem();
             managementSystem.FillInitialData();
             managementSystem.ShowAllInfo();
             #endregion
-
-            // I wrote this comment just to see if branches works properly
 
             while (true)
             {
@@ -31,7 +26,7 @@ namespace DmitryChallenge
                     "\n'enroll' - enroll a student to course" +
                     "\n'drop' - drop a student from course" +
                     "\n'teach' - make professor to teach a course" +
-                    "\n'exempt' - make professor exempt from course", 
+                    "\n'exempt' - make professor exempt from course",
                     ConsoleColor.Yellow);
                 string userInput = managementSystem.TryToGetCorrectInput();
 
@@ -55,53 +50,23 @@ namespace DmitryChallenge
 
                         Console.ReadKey();
                         break;
-                    case "student": //refactor
-                        Console.Write($"Write student name: ");
-                        string studentName = managementSystem.TryToGetCorrectInput();
-                        student = new Student(studentName);
-                        managementSystem.CreateMember(student);
+                    case "student":
+                        _universityMembers.Add(new Student(managementSystem.CreateMemberName()));
                         break;
                     case "professor":
-                        Console.Write($"Write professor name: ");
-                        string professorName = managementSystem.TryToGetCorrectInput();
-                        professor = new Professor(professorName);
-                        managementSystem.CreateMember(professor);
+                        _universityMembers.Add(new Professor(managementSystem.CreateMemberName()));
                         break;
                     case "enroll":
-                        student = _universityMembers[managementSystem.GetId("member")] as Student;
-                        if (student == null)
-                            PrintErrorAndExit("This is not a student!");
-                        course = _courses[managementSystem.GetId("course")];
-                        student.Enroll(course);
-                        Console.WriteLine("Enrolled successfully");
-                        Console.ReadKey();
+
                         break;
                     case "drop":
-                        student = _universityMembers[managementSystem.GetId("member")] as Student;
-                        if (student == null)
-                            PrintErrorAndExit("This is not a student!");
-                        course = _courses[managementSystem.GetId("course")];
-                        student.Drop(course);
-                        Console.WriteLine("Dropped succsessfully");
-                        Console.ReadKey();
+
                         break;
                     case "teach":
-                        professor = _universityMembers[managementSystem.GetId("member")] as Professor;
-                        if (professor == null)
-                            PrintErrorAndExit("This is not a professor!");
-                        course = _courses[managementSystem.GetId("course")];
-                        professor.Teach(course);
-                        Console.WriteLine("Professor is succsessfully assigned to teach this course");
-                        Console.ReadKey();
+
                         break;
                     case "exempt":
-                        professor = _universityMembers[managementSystem.GetId("member")] as Professor;
-                        if (professor == null)
-                            PrintErrorAndExit("This is not a professor!");
-                        course = _courses[managementSystem.GetId("course")];
-                        professor.Exempt(course);
-                        Console.WriteLine("Professor is exempted");
-                        Console.ReadKey();
+
                         break;
                     default:
                         PrintErrorAndExit("Error!");
@@ -119,11 +84,39 @@ namespace DmitryChallenge
             }
         }
 
-        private void CreateMember(UniversityMember member)
+        private void StudentActingWithCourse()
         {
-            _universityMembers.Add(member);
+            Student student;
+            Course course;
+
+            student = _universityMembers[GetId("member")] as Student;
+            if (student == null)
+                PrintErrorAndExit("This is not a student!");
+            course = _courses[GetId("course")];
+            student.Enroll(course); // here 
+            Console.ReadKey();
+        }
+
+        private void ProfessorActingWithCourse()
+        {
+            Professor professor;
+            Course course;
+
+            professor = _universityMembers[GetId("member")] as Professor;
+            if (professor == null)
+                PrintErrorAndExit("This is not a professor!");
+            course = _courses[GetId("course")];
+            professor.Teach(course); // here
+            Console.ReadKey();
+        }
+
+        private string CreateMemberName()
+        {
+            Console.Write("Write name: ");
+            string memberName = TryToGetCorrectInput();
             Console.WriteLine("Added successfully");
             Console.ReadKey();
+            return memberName;
         }
 
         private void FillInitialData()
@@ -173,14 +166,14 @@ namespace DmitryChallenge
                     Console.Write("Name: ");
                     student.PrintName();
                     Console.WriteLine("");
-                    PrintColoredMessage("Courses enrolled: ", ConsoleColor.Green);
+                    PrintColoredMessage("Courses enrolled: ", ConsoleColor.Red);
                     student.ShowEnrolledCourses();
                     Console.WriteLine("----------------------------------------");
                 }
             }
         }
 
-        public void ShowProfessorsInfo()
+        private void ShowProfessorsInfo()
         {
             PrintColoredMessage("\t\tPROFESSORS: ", ConsoleColor.Green);
 
@@ -204,7 +197,7 @@ namespace DmitryChallenge
             }
         }
 
-        public void ShowCoursesInfo()
+        private void ShowCoursesInfo()
         {
             PrintColoredMessage("\t\tCOURSES: ", ConsoleColor.Green);
 
@@ -252,7 +245,7 @@ namespace DmitryChallenge
             {
                 return input;
             }
-            else 
+            else
             {
                 PrintErrorAndExit("Inappropriate value!");
                 return "";
