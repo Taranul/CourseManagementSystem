@@ -12,6 +12,7 @@
             _memberName = memberName;
         }
 
+        // refactor theese 3 methods
         public void PrintId()
         {
             Console.WriteLine(_memberId);

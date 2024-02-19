@@ -17,11 +17,13 @@
             _enrolledStudents = new List<Student>();
         }
 
+        // unprotected
         public void AddStudent(Student student)
         {
             _enrolledStudents.Add(student);
         }
 
+        // unprotected
         public void RemoveStudent(Student student)
         {
             _enrolledStudents.Remove(student);
